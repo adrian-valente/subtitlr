@@ -106,15 +106,24 @@ def translate(text, src, dest, superpose=False, color='yellow'):
     
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', '-i', type=str, required=True)
-    parser.add_argument('--output', '-o', type=str, default=None)
+    parser.add_argument('--input', '-i', type=str, required=True,
+                        help='Input video or audio or subtitle file')
+    parser.add_argument('--output', '-o', type=str, default=None,
+                        help='Output subtitle file')
     parser.add_argument('--model-size', type=str, default='tiny',
-                        choices=available_models())
-    parser.add_argument('--device', type=str, default='cpu')
-    parser.add_argument('--compute-type', type=str, default='default')
-    parser.add_argument('--translate', type=str, default=None)
-    parser.add_argument('--superpose', action='store_true', default=False)
-    parser.add_argument('--audio-lang', type=str, default=None)
+                        choices=available_models(),
+                        help='Model size (see openai/whisper repo)')
+    parser.add_argument('--device', type=str, default='cpu',
+                        help='Device to use (cpu, cuda, cuda:0, ...)')
+    parser.add_argument('--compute-type', type=str, default='default',
+                        choices=['int8', 'float16', 'float32'],
+                        help='Compute type (default, float16, float32, float64)')
+    parser.add_argument('--translate', type=str, default=None,
+                        help='If set, translate to this language (e.g. en, fr, es, ...)')
+    parser.add_argument('--superpose', action='store_true', default=False,
+                        help='If set, superpose the original and translated subtitles')
+    parser.add_argument('--audio-lang', type=str, default=None,
+                        help='If set, force the original language (e.g. en, fr, es, ...)')
     args = parser.parse_args()
     
     if args.translate is not None:
