@@ -1,7 +1,8 @@
 import argparse
+import importlib
 import os
-import tempfile
 import subprocess
+import tempfile
 from faster_whisper import WhisperModel, available_models
 
 
@@ -101,12 +102,11 @@ def translate(text, src, dest, superpose=False, color='yellow'):
         else:
             output += times + '\n' + translated + '\n\n'
     return output              
-        
     
-
-if __name__ == '__main__':
+    
+def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', '-i', type=str)
+    parser.add_argument('--input', '-i', type=str, required=True)
     parser.add_argument('--output', '-o', type=str, default=None)
     parser.add_argument('--model-size', type=str, default='tiny',
                         choices=available_models())
@@ -118,8 +118,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     if args.translate is not None:
-        import googletrans
-        assert valid_lang(args.translate)
+        global googletrans
+        googletrans = importlib.import_module('googletrans')
+        if not valid_lang(args.translate):
+            raise ValueError("Invalid language code {args.translate}")
     
     if not is_subtitle_file(args.input):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -138,7 +140,6 @@ if __name__ == '__main__':
                 compute_type=args.compute_type,
                 audio_lang=args.audio_lang
             )
-        
     # Translation
     if args.translate is not None:
         if is_subtitle_file(args.input):
@@ -160,3 +161,7 @@ if __name__ == '__main__':
         f.write(text)
     print(f'Subtitles saved to {output_file}')
     print('Done')
+    
+
+if __name__ == '__main__':
+    main()
