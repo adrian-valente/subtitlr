@@ -4,6 +4,10 @@ Automatic subtitle generation &amp; translation in python with [faster-whisper](
 Implicitly, ffmpeg is used for audio extraction (but required anyway by faster-whisper). Bearing in mind that googletrans uses an unofficial API, I am planning to integrate the [translate](https://github.com/terryyin/translate-python) module as an option soon (using the official APIs of deepl, Azure...).
 
 ## Installing
+Via pip: create a virtual environment and run:
+```sh
+pip install git+https://github.com/adrian-valente/subtitlr/
+```
 From source: in the repository root folder, create a virtual environment and run:
 ```sh
 python setup.py install
